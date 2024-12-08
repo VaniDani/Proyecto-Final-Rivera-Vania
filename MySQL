@@ -1,0 +1,74 @@
+Iniciar sesioón con cuenta pasada:
+
+mysql> CREATE USER 'Vani_Dani'@'localhost' IDENTIFIED BY '  '; //contraseña
+Query OK, 0 rows affected (0.39 sec)
+
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'Vani_Dani'@'localhost' WITH GRANT OPTION;
+Query OK, 0 rows affected (0.02 sec)
+
+Cerrar sesión
+
+C:\Users\vania>MySQL -u Vani_Dani -p
+Enter password: *******************
+
+mysql> CREATE DATABASE proyecto_final;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> USE proyecto_final;
+Database changed
+
+mysql> CREATE TABLE usuarios (
+    ->   id INT AUTO_INCREMENT PRIMARY KEY,
+    ->   nombre_usuario VARCHAR(50) UNIQUE,
+    ->   password VARCHAR(200),
+    -> tipo_usuario VARCHAR(100));
+Query OK, 0 rows affected (0.20 sec)
+
+mysql> CREATE TABLE codigos_acceso (
+    ->     codigo VARCHAR(10) PRIMARY KEY,
+    ->     tipo_usuario VARCHAR(20) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE protesis(
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> tipo_protesis VARCHAR(300),
+    -> disponibilidad VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE pacientes(
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> nombre VARCHAR(300),
+    -> edad INT,
+    -> protesis_id INT,
+    -> FOREIGN KEY (protesis_id) REFERENCES protesis(id)
+    -> );
+
+mysql> ALTER TABLE protesis ADD estado VARCHAR(200);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE protesis ADD precio DECIMAL(20,2);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE protesis DROP COLUMN disponibilidad;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO codigos_acceso (codigo,tipo_usuario) VALUES ('123','Ingeniero');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO codigos_acceso (codigo,tipo_usuario) VALUES ('234','Medico');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO codigos_acceso (codigo,tipo_usuario) VALUES ('345','Paciente');
+Query OK, 1 row affected (0.01 sec)
+
+
+
+
+
+
+
