@@ -45,9 +45,6 @@ mysql> CREATE TABLE pacientes(
     -> FOREIGN KEY (protesis_id) REFERENCES protesis(id)
     -> );
 
-mysql> ALTER TABLE protesis ADD estado VARCHAR(200);
-Query OK, 0 rows affected (0.04 sec)
-Records: 0  Duplicates: 0  Warnings: 0
 
 mysql> ALTER TABLE protesis ADD precio DECIMAL(20,2);
 Query OK, 0 rows affected (0.03 sec)
@@ -65,6 +62,91 @@ Query OK, 1 row affected (0.01 sec)
 
 mysql> INSERT INTO codigos_acceso (codigo,tipo_usuario) VALUES ('345','Paciente');
 Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO protesis (tipo_protesis,precio) VALUES ('Pierna',30000.00);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO protesis (tipo_protesis,precio) VALUES ('Brazo', 25000.00);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO pacientes (nombre,edad,protesis_id) VALUES ('Vania',20,1);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO pacientes (nombre,edad,protesis_id) VALUES ('Ivan',20,2);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> UPDATE protesis SET precio = 20000.00 WHERE tipo_protesis='Brazo';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> DELETE FROM pacientes WHERE nombre = 'Kevin';
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SET GLOBAL time_zone = '-08:00';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> ALTER TABLE pacientes ADD fecha_ingreso TIMESTAMP;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> UPDATE pacientes SET fecha_ingreso = '2024-01-01 03:14:12' WHERE nombre='Vania';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE pacientes SET fecha_ingreso = '2024-02-02 01:11:12' WHERE nombre='Ivan';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> CREATE VIEW vista_pacientes_protesis AS
+    -> SELECT pacientes.nombre, pacientes.edad, protesis.tipo_protesis AS protesis
+    -> FROM pacientes
+    -> JOIN protesis ON pacientes.protesis_id = protesis.id;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> SELECT*FROM vista_pacientes_protesis;
++--------+------+----------+
+| nombre | edad | protesis |
++--------+------+----------+
+| Vania  |   20 | Pierna   |
+| Ivan   |   20 | Brazo    |
++--------+------+----------+
+2 rows in set (0.01 sec)
+
+mysql> SELECT AVG(precio) AS precio_promedio FROM protesis;
++-----------------+
+| precio_promedio |
++-----------------+
+|    25000.000000 |
++-----------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT protesis.tipo_protesis, COUNT(pacientes.id) AS num_pacientes
+    -> FROM pacientes
+    -> JOIN protesis ON pacientes.protesis_id = protesis.id
+    -> GROUP BY protesis.tipo_protesis;
++---------------+---------------+
+| tipo_protesis | num_pacientes |
++---------------+---------------+
+| Pierna        |             1 |
+| Brazo         |             1 |
++---------------+---------------+
+2 rows in set (0.01 sec)
+
+mysql> SELECT nombre
+    -> FROM pacientes
+    -> WHERE protesis_id IN (SELECT id FROM protesis WHERE tipo_protesis='Brazo');
++--------+
+| nombre |
++--------+
+| Ivan   |
++--------+
+1 row in set (0.01 sec)
+
+
+
+
+
+
 
 
 
