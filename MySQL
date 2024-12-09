@@ -142,7 +142,17 @@ mysql> SELECT nombre
 +--------+
 1 row in set (0.01 sec)
 
+mysql> START TRANSACTION;
+Query OK, 0 rows affected (0.07 sec)
 
+mysql> INSERT INTO usuarios (nombre_usuario,password,tipo_usuario) VALUES ('Vania','123','123');
+Query OK, 1 row affected (0.10 sec)
+
+mysql> ROLLBACK;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT*FROM usuarios;
+Empty set (0.01 sec)
 
 
 
