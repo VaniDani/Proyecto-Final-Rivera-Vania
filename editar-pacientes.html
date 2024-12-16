@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Paciente</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <link rel="stylesheet" href="/styles.css">
+
+  <h2>Editar Paciente</h2>
+  <form id="buscarPacienteForm">
+    <label for="paciente-id">ID del Paciente:</label>
+    <input type="number" id="paciente-id" required>
+    <button type="button" onclick="buscarPaciente()">Buscar</button>
+  </form>
+  
+  <form id="editarPacienteForm" style="display: none;" method="POST" action="/editar-pacientes">
+    <input type="hidden" id="paciente-id-hidden" name="id">
+    
+    <label for="name">Nombre del paciente:</label>
+    <input type="text" id="name" name="name">
+
+    <label for="age">Edad:</label>
+    <input type="number" id="age" name="age">
+
+    <label for="protesis-id">ID de protesis:</label>
+    <input type="text" id="protesis-id" name="protesis_id">
+
+    <label for="fecha">Fecha:</label>
+    <input type="datetime" id="fecha" name="fecha">
+
+    <button type="submit">Guardar Cambios</button>
+    <button type="button" onclick="eliminarPaciente()">Eliminar Paciente</button>
+  </form>
+
+  <script>
+    function buscarPaciente() {
+      const PacienteId = document.getElementById('paciente-id').value;
+      fetch(`/obtener-paciente/${PacienteId}`)
+        .then(response => {
+          if (!response.ok) throw new Error('Paciente no encontrado');
+          return response.json();
+        })
+        .then(data => {
+          document.getElementById('editarPacienteForm').style.display = 'block';
+          document.getElementById('paciente-id-hidden').value = data.id;
+          document.getElementById('nombre').value = data.nombre;
+          document.getElementById('edad').value = data.edad;
+          document.getElementById('protesis_id').value = data.protesis_id;
+          document.getElementById('fecha_ingreso').value = data.fecha_ingreso;
+        })
+        .catch(error => alert(error.message));
+    }
+
+    function eliminarPaciente() {
+      const pacienteId = document.getElementById('paciente-id-hidden').value;
+      if (confirm('¿Estás seguro de que deseas eliminar este paciente?')) {
+        fetch(`/eliminar-paciente/${pacienteId}`, {
+          method: 'DELETE'
+        })
+        .then(response => {
+          if (response.ok) {
+            alert('Paciente eliminado correctamente.');
+            window.location.href = '/pacientes'; // Redirigir a la lista de pacientes
+          } else {
+            alert('Error al eliminar el paciente.');
+          }
+        })
+        .catch(error => console.error('Error al eliminar el paciente:', error));
+      }
+    }
+  </script>
+
+  <button onclick="window.location.href='/'">Volver</button>
+</body>
+</html>
