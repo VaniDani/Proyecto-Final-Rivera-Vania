@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="stylesheet" href="/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Página principal</title>
+</head>
+<body>
+  <div id="navbar"></div>
+ 
+  <script>
+      // Insertar el contenido de navbar.html en el elemento con id "navbar"
+      fetch('/navbar.html')
+          .then(response => response.text())
+          .then(data => {
+              document.getElementById('navbar').innerHTML = data;
+          })
+          .catch(error => console.error('Error cargando el navbar:', error));
+  </script>
+
+<script>
+  // Solicitar el tipo de usuario y ajustar el menú en función de este
+  fetch('/tipo-usuario')
+      .then(response => response.json())
+      .then(data => {
+          const menu = document.getElementById('menu');
+          const tipoUsuario = data.tipo_usuario;
+
+          // Agregar opciones de menú según el tipo de usuario
+          if (tipoUsuario === 'Ingeniero') {
+              menu.innerHTML += '<li><a href="/ver-usuarios">Ver Usuarios</a></li>';
+              menu.innerHTML += '<li><a href="/gestionar-registros">Editar Protesis</a></li>';
+              menu.innerHTML += '<li><a href="/protesis">Ver Protesis</a></li>';
+              menu.innerHTML += '<li><a href="/protesis.html">Protesis Excel</a></li>';
+              menu.innerHTML += '<li><a href="/busqueda.html">Buscador de usuarios</a></li>';
+
+          } else if (tipoUsuario === 'Medico') {
+              menu.innerHTML += '<li><a href="/pacientes">Ver Pacientes</a></li>';
+              menu.innerHTML += '<li><a href="/editar-pacientes">Editar Pacientes</a></li>';
+              menu.innerHTML += '<li><a href="/protesis.html">Protesis Excel</a></li>';
+              menu.innerHTML += '<li><a href="/protesis">Ver Protesis</a></li>';
+
+          } else if (tipoUsuario === 'Paciente') {
+              menu.innerHTML += '<li><a href="/ver-mis-datos">Mis Datos</a></li>';
+              menu.innerHTML += '<li><a href="/protesis">Ver Protesis</a></li>';
+          }
+
+          // Opción de cerrar sesión para todos los tipos de usuario
+          menu.innerHTML += '<li><a href="/logout">Cerrar Sesión</a></li>';
+      })
+      .catch(error => console.error('Error obteniendo el tipo de usuario:', error));
+</script>
+
+
+  <h1>Bienvenido a la Gestión de Protesis</h1>
+  <p>Esta es una página básica para administrar protesis y pacientes.</p>
+
+  <h2>Registrar Pacientes</h2>
+  <form action="/submit-data" method="POST">
+    <label for="name">Nombre del paciente:</label>
+    <input type="text" id="name" name="name">
+
+    <label for="age">Edad:</label>
+    <input type="number" id="age" name="age">
+
+    <label for="protesis-id">Id de protesis asignada:</label>
+    <input type="text" id="protesis-id" name="protesis_id">
+
+    <label for="fecha">Fecha:</label>
+    <input type="date" id="fecha" name="fecha">
+
+    <button type="submit">Guardar</button>
+  </form>
+
+  
+  <h2>Buscar Pacientes</h2>
+  <form action="/buscar-pacientes" method="GET">
+    <label for="name-search">Nombre del paciente:</label>
+    <input type="text" id="name-search" name="name_search">
+    <label for="age-search">Edad del paciente:</label>
+    <input type="number" id="age-search" name="age_search">
+    <button type="submit">Buscar</button>
+  </form>
+
+  <h2>Buscar Pacientes por su Protesis</h2>
+  <form action="/busqueda-protesis" method="GET">
+    <label for="protesis-search">Tipo de protesis</label>
+    <input type="text" id="protesis-search" name="protesis_search">
+    <button type="submit">Buscar</button>
+  </form>
+
+  <h2>Registrar Protesis</h2>
+  <form action="/insertar-protesis" method="POST">
+    <label for="protesis">Tipo de protesis:</label>
+    <input type="text" id="protesis" name="protesis">
+    <label for="precio">Precio:</label>
+    <input type="number" id="precio" name="precio">
+    <button type="submit">Guardar Protesis</button>
+  </form>
+
+  <button onclick="window.location.href='/promedio'">Ver Promedio de Precio de Protesis</button>
+  <button onclick="window.location.href='/conteo'">Conteo de Pacientes por Protesis</button>
+
+</body>
+</html>
